@@ -291,6 +291,17 @@
     cursor: pointer;
 }
 
+.incoming-btn {
+    width: 200px;
+    height: 50px;
+    background-color: #ccc; /* Change the background color for the disabled state */
+    color: #999;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+
+
 .sell-btn:hover {
     border: #FE6F5E 1px solid;
     color: #FE6F5E;

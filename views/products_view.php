@@ -141,16 +141,14 @@ ob_end_flush();
                     </div>
 
                     <hr class="hr-product">
-                    <form action="#" method="post">
+          
                     <div class="product-action">
-                      <input type="hidden" name="product_id" value="'.$row['product_id'].'">
-                   <input type="hidden" name="quantity" value="1">
-        <button class="sell-btn" type="submit" id="sell-product">Sell</button>
-        <button class="add-to-cart-btn" type="submit" id="#">
-            <span>Incoming</span>
+                
+        <button class="incoming-btn" type="submit" id="#">
+            <span>Incoming...  </span>
         </button>
     </div>
-</form>
+
                     ';
                       }else
                       echo '<hr class="hr-product">
