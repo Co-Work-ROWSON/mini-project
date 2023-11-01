@@ -54,7 +54,7 @@
                             echo '<li>
                             <div class="collection-card" style="background-image: url(../assets/images/'.$row['c_image'].')">
                                 <h3 class="h4 card-titlet">'.$row['category_name'].'</h3>
-                                <a href="#" class="btn btn-secondary">
+                                <a href="../views/allproduct.php" class="btn btn-secondary">
                                     <span>Explore All</span>
                                     <ion-icon name="arrow-forward-outline" aria-hidden="true"></ion-icon>
                                 </a>
@@ -106,9 +106,17 @@
                       <p class="hero-text">
                         ' . $row['bannerlist_infoL2'] . '
                       </p>
-                      <a href="../views/products_view.php?product_id=' . $row['product_id'] . '"><button class="btn btn-primary">
+                      <a href="../views/products_view.php?product_id=' . $row['product_id'] . '">
+                      <button class="btn btn-primary">';
+                      if ($releaseDate > $currentTime) {
+                        echo '<span>Coming Soon</span>';
+                      } else {
+                        echo '
+                        <a href="../views/products_view.php?product_id=' . $row['product_id'] . '"><button class="btn btn-primary">
                         <span>Shop Now</span>
-                        <ion-icon name="arrow-forward-outline" aria-hidden="true"></ion-icon>
+                        <ion-icon name="arrow-forward-outline" aria-hidden="true"></ion-icon>';
+                      }   
+                      echo '
                       </button></a>
                     </div>
                   </div>';

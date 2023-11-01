@@ -125,38 +125,50 @@ ob_end_flush();
                         <p class="logis-detail">Ship via logistic partner (2-4 days)</p>
                         </div>
                       </div>
-                    
-                      <div class="logis_alert">
+                    <?php
+
+                      $result = tablequery('SELECT b.*, p.Release_Date FROM bannerlists b join products p on b.product_id = p.product_id WHERE p.Release_Date order by p.Release_Date DESC ');
+                      $result = $conn->query($sql);
+                      $releaseDate = strtotime($row['Release_Date']);
+                      $currentTime = time();
+
+                      if($releaseDate > $currentTime){
+                        echo '<div class="logis_alert">
                         <div class="logis-alert-detail" >
                       <span class="material-symbols-outlined" style= "color: rgb(211, 47, 47);">error</span>
                       <span class="span">New drops items may experience slight delay according to the distributor</span>
                       </div>  
                     </div>
-                    </div>
-                    
+
                     <hr class="hr-product">
-                    <div class="product">
-                    <div class="product-quantity">
-                        <h4 class="product-quantity-title">Quantity</h4>
-                        <div class="product-quantity-container">
-                            <button class="product-quantity-btn" data-action="decrement">-</button>
-                            <input class="product-quantity-input" type="number" value="1" min="1" max="10">
-                            <button class="product-quantity-btn" data-action="increment">+</button>
-                        </div>
-                    </div>
-                    </div>
-                    <hr class="hr-product">
-                    <form action="add_to_cart.php" method="post">
-    <div class="product-action">
-        <input type="hidden" name="product_id" value="<?=$row['product_id']?>">
-        <input type="hidden" name="quantity" value="1">
+                    <form action="#" method="post">
+                    <div class="product-action">
+                      <input type="hidden" name="product_id" value="'.$row['product_id'].'">
+                   <input type="hidden" name="quantity" value="1">
         <button class="sell-btn" type="submit" id="sell-product">Sell</button>
-        <button class="add-to-cart-btn" type="submit" id="add-to-cart">
-            <span>Add to Cart</span>
+        <button class="add-to-cart-btn" type="submit" id="#">
+            <span>Incoming</span>
         </button>
     </div>
 </form>
-
+                    ';
+                      }else
+                      echo '<hr class="hr-product">
+                    
+                      <form action="add_to_cart.php" method="post">
+      <div class="product-action">
+          <input type="hidden" name="product_id" value="'.$row['product_id'].'">
+          <input type="hidden" name="quantity" value="1">
+          <button class="sell-btn" type="submit" id="sell-product">Sell</button>
+          <button class="add-to-cart-btn" type="submit" id="add-to-cart">
+              <span>Add to Cart</span>
+          </button>
+      </div>
+  </form>';
+                    ?>
+                    
+                    </div>
+                    
                 </div>
             </div>
         </section>

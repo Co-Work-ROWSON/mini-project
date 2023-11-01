@@ -160,7 +160,7 @@ if ($user) {
           </li>
 
           <li class="navbar-item">
-            <a href="#" class="navbar-link">Ready to ship</a>
+            <a href="../views/allproduct.php" class="navbar-link">Ready to ship</a>
           </li>
           
           <li class="navbar-item">
@@ -174,11 +174,6 @@ if ($user) {
           <li class="navbar-item">
             <a href="#" class="navbar-link">Contact</a>
           </li>
-
-          <li class="navbar-item">
-            <a href="../global/test.php" class="navbar-link">Test</a>
-          </li>
-        </ul>
 
         <ul class="nav-action-list">
 

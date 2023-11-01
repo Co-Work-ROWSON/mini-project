@@ -1127,7 +1127,7 @@ a.footer-link:is(:hover, :focus) { color: var(--bittersweet); }
 
 .clock{
   color: #fff;
-  width: 40vw;
+  width: 51rem;
   height: 100%;
   /*background: rgba(255, 255, 255, 0.2);*/
   border: #fff 1px solid;
