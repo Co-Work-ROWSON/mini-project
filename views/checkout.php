@@ -4,11 +4,12 @@
     require '../global/header.php'; 
     require '../global/menubar.php';
 
-    if(!isset($_SESSION['user_login'])){
-      //อย่าลืมทำalertให้เข้าสู่ระบบ
-      header('location: login.php');
-    }
-    
+    if (isset($_SESSION['user_login'])) {
+      $userId = $_SESSION['user_login'];
+  } else {
+      $userId = ''; // or any default value you want
+  }
+    //print_r($userId);
 ?>
 <!doctype html>
 <html lang="en" data-bs-theme="auto">
@@ -152,52 +153,47 @@
     <div class="py-5 text-center"></div>
 
     <div class="row g-5">
-      <div class="col-md-5 col-lg-4 order-md-last">
+
+    <?php
+    $resuit = tablequery("SELECT c.*, p.product_name, p.price, p.p_image
+                                  FROM carts c
+                                  JOIN products p ON c.product_id = p.product_id
+                                  WHERE c.user_id = '$userId'");
+        if (empty($cart)) {
+          $rowCount = 0;
+      } else {
+          $rowCount = $cart->rowCount();
+      }
+
+      echo '<div class="col-md-5 col-lg-4 order-md-last">
         <h4 class="d-flex justify-content-between align-items-center mb-3">
           <span class="text-primary">Your cart</span>
-          <span class="badge bg-primary rounded-pill">3</span>
+          <span class="badge bg-primary rounded-pill">'.$rowCount.'</span>
         </h4>
-        <ul class="list-group mb-3">
-          <li class="list-group-item d-flex justify-content-between lh-sm">
-            <div>
-              <h6 class="my-0">Product name</h6>
-              <small class="text-body-secondary">Brief description</small>
-            </div>
-            <span class="text-body-secondary">$12</span>
-          </li>
-          <li class="list-group-item d-flex justify-content-between lh-sm">
-            <div>
-              <h6 class="my-0">Second product</h6>
-              <small class="text-body-secondary">Brief description</small>
-            </div>
-            <span class="text-body-secondary">$8</span>
-          </li>
-          <li class="list-group-item d-flex justify-content-between lh-sm">
-            <div>
-              <h6 class="my-0">Third item</h6>
-              <small class="text-body-secondary">Brief description</small>
-            </div>
-            <span class="text-body-secondary">$5</span>
-          </li>
-          <li class="list-group-item d-flex justify-content-between bg-body-tertiary">
-            <div class="text-success">
-              <h6 class="my-0">Promo code</h6>
-              <small>EXAMPLECODE</small>
-            </div>
-            <span class="text-success">−$5</span>
-          </li>
-          <li class="list-group-item d-flex justify-content-between">
-            <span>Total (USD)</span>
-            <strong>$20</strong>
-          </li>
+        <ul class="list-group mb-3">';                           
+      
+            if ($resuit) {
+              if ($resuit->rowCount() > 0) {
+                foreach ($resuit as $row) {
+                  $itemTotal = $row['price'] * $row['quantity'];
+                  $alltotal += $itemTotal;
+                  echo '<li class="list-group-item d-flex justify-content-between lh-sm">
+                  <div>
+                    <h6 class="my-0">' . $row['product_name'] . '</h6>
+                    <small class="text-body-secondary">Brief description</small>
+                  </div>
+                  <span class="text-body-secondary">฿ ' . $row['price'] . '</span>
+                </li>';
+                }
+              }
+                echo '<li class="list-group-item d-flex justify-content-between">
+                <span>Total (THB)</span>
+                <strong>฿ ' . $alltotal . '</strong>
+              </li>';
+            }
+          ?>
         </ul>
 
-        <form class="card p-2">
-          <div class="input-group">
-            <input type="text" class="form-control" placeholder="Promo code">
-            <button type="submit" class="btn btn-secondary">Redeem</button>
-          </div>
-        </form>
       </div>
       <div class="col-md-7 col-lg-8">
         <h4 class="mb-3">Billing address</h4>
@@ -320,14 +316,6 @@
     </div>
   </main>
 
-  <footer class="my-5 pt-5 text-body-secondary text-center text-small">
-    <p class="mb-1">&copy; 2022-2023 Fastlane</p>
-    <ul class="list-inline">
-      <li class="list-inline-item"><a href="#">Privacy</a></li>
-      <li class="list-inline-item"><a href="#">Terms</a></li>
-      <li class="list-inline-item"><a href="#">Support</a></li>
-    </ul>
-  </footer>
 </div>
 <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -358,5 +346,37 @@
     
 ionicon link--><script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script><script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 
+<?php require '../global/footer.php'; ?>
+
+
+  <!-- 
+    - #GO TO TOP
+  -->
+  <a href="#top" class="go-top-btn" data-go-top>
+    <ion-icon name="arrow-up-outline"></ion-icon>
+  </a>
+
+
+
+  <!-- 
+    - custom js link
+  -->
+  <script src="../assets/js/script.js"></script>
+
+
+  <!-- 
+    - ionicon link
+  -->
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+
+  <!-- 
+    - tailwindcss link
+  -->
+  <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
 </body>
+
 </html>

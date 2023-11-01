@@ -1,235 +1,100 @@
 <?php 
-  require '../global/conn.php';
-  require '../global/func.php';
-  require '../global/header.php'; 
-  
-  $user = $_SESSION['user_login'];
-  print_r($user);
+    require '../global/conn.php';
+    require '../global/func.php';
+    require '../global/header.php'; 
+    require '../global/menubar.php';
 
-if (!checkLogin()) {
-    $link = "../views/login.php";
-    $text = "Login / Register";
-    $profile_img = '<ion-icon name="person-outline" aria-hidden="true"></ion-icon>';
-} else {
-    $link = "../views/profile.php";
-    $text = "Profile";
-}
-
-if ($user) {
-    $result = tablequery("SELECT * FROM users WHERE user_id = '$user'");
-    
-    if ($result) {
-        $row = $result->fetch(PDO::FETCH_ASSOC);
-
-        if (!empty($row['user_image'])) {
-            $profile_img = '<img src="../assets/images/upload/' . $row['user_image'] . '" width="22" height="22" loading="lazy"
-            alt="' . $row['username'] . '" class="dummy-profile">';
-        } else {
-            $dummy_txt = strtoupper(substr($row['first_name'], 0, 1) . substr($row['last_name'], 0, 1));
-            $profile_img = '<div class="dummy-profile">
-                <p class="dummy-profile-text">' . $dummy_txt . '</p>
-            </div>';
-        }
-    } else {
-        $profile_img = '<ion-icon name="person-outline" aria-hidden="true"></ion-icon>';
-    }
-}
+    if (isset($_SESSION['user_login'])) {
+      $userId = $_SESSION['user_login'];
+  } else {
+      $userId = ''; // or any default value you want
+  }
+    print_r($userId);
 ?>
 
-<!-- 
-    - #HEADER
-  -->
-  <link rel="stylesheet" href="..\assets\css\style.css">
-  <div class="page__overlay"></div>
-  <header class="header" data-header>
+<section class="section upcoming" id="upcoming">
+        <div class="container">
+          <h2 class="h2 section-title">Upcoming Release</h2>
+      <?php
+      $result = tablequery('SELECT b.*, p.Release_Date FROM bannerlists b join products p on b.product_id = p.product_id WHERE p.Release_Date order by p.Release_Date DESC ');
+      if ($result) {
+        // Use foreach to iterate through the result set
+        foreach ($result as $row)  { 
+            echo '<div class = "section upcoming-list" style="background-image: url(../assets/images/' . $row['bn_image'] . ')">
+            <div class="container '.$row['text_layout'].'">';
 
-  <div class="cart-container">
-    <div class="cart" style="top: 0;">
-      <div class="cart-top">Add To Card</div>
-      <div class="cart-inner">
-        <div class="cart-title">
-          <span class="material-symbols-outlined" style="position: absolute; left: 0; top: 100%; width: 24px; height: 30px; margin-top: -15px; transform: translateY(-50%);">check_circle</span>
-          <h2>Add to cart</h2>
-        </div>
-        <?php
-if ($user) {
-    $cart = tablequery("SELECT c.*, p.product_name, p.price, p.p_image
-                        FROM carts c
-                        JOIN products p ON c.product_id = p.product_id
-                        WHERE c.user_id = '$user'");
-    $rowCount = $cart->rowCount();
-    $alltotal = 0; // Initialize the total price.
-
-    if ($rowCount > 0) {
-        echo '<div class="cart-item">';
-        foreach ($cart as $row) {
-            // Calculate the total for each item and add it to the overall total.
-            $itemTotal = $row['price'] * $row['quantity'];
-            $alltotal += $itemTotal;
-
-            echo '<div class="cart-item-warpper">
-            <div class="cart-item-img">
-                <img src="../assets/images/' . $row['p_image'] . '" width="64px" height="64px" alt="" class="cart-img">
-            </div>
-            <div class="cart-item-detail">
-                <form action="../views/delete_cart.php" method="post">
-                <input type="hidden" name="product_id" value="'.$row['product_id'].'">
-                <input type="hidden" name="user_id" value="'.$row['user_id'].'">
-                <button type="submit" class="delete-button" name="delete_item">
-                <span class="material-symbols-outlined" style="position: absolute; width: 34px; height: 34px; background-position: -213px 0; 
-                right: 4px; top: 4px; padding: 0; transform: scale(0.72); cursor: pointer;">close</span>
-                </form>
-                <p class="cart-item-name">
-                    <a href="#" class="a-item-name"> ' . $row['product_name'] . ' </a>
-                </p>
-                <span class="cart-item-price">$ ' . $row['total'] . '</span>
-            </div>
-        </div>';
+            $releaseDate = strtotime($row['Release_Date']);
+            $currentTime = time();
+            
+            if ($releaseDate > $currentTime) {
+                // Display the timer container only if the release date is in the future
+                echo '<div class="timer-container" release_date="' . $row['Release_Date'] . '">
+                          <div class="clock" id="#">
+                            <span id="day">00</span>
+                            <span>:</span>
+                            <span id="hrs">00</span>
+                            <span>:</span>
+                            <span id="mins">00</span>
+                            <span>:</span>
+                            <span id="sec">00</span>
+                          </div>
+                        </div>';
+            }
+                echo' <h2 class="h1 hero-title">
+                        <strong>' . $row['bannerlist_infoL1'] . '</strong>
+                      </h2>
+                      <p class="hero-text">
+                        ' . $row['bannerlist_infoL2'] . '
+                      </p>
+                      <a href="../views/products_view.php?product_id=' . $row['product_id'] . '"><button class="btn btn-primary">
+                        <span>Shop Now</span>
+                        <ion-icon name="arrow-forward-outline" aria-hidden="true"></ion-icon>
+                      </button></a>
+                    </div>
+                  </div>';
+          }
+        }else {
+            echo "0 results";
         }
-
-        echo '</div>
-        <div class="cart-bottom">
-                <div class="cart-total">
-                <h6>Total: <span class="cart-total-cast">$ ' . $alltotal . '</span></h6>
-                </div>
-                <div class="cart-button">
-                  <a href="#" class="cart-btn2">View Cart(' . $rowCount . ')</a>
-                  <a href="../views/allproduct.php" class="cart-btn1">Continue Shopping</a>
-              </div>
-            </div>';
-    } else {
-        echo '<div class="cart-item-empty">
-        <p class="cart-text-empty">Your cart is empty</p>
-        <div class="cart-button">
-            <a href="../views/allproduct.php" class="cart-btn2">Start Shopping</a>
-        </div>';
-    }
-} else {
-    echo '<div class="cart-item-empty">
-    <p class="cart-text-empty">Your cart is empty</p>
-    <div class="cart-button">
-        <a href="../views/allproduct.php" class="cart-btn2">Start Shopping</a>
-    </div>
-  </div>';
-}
-?>
-
+      ?>
       </div>
-    </div>
-  </div>
 
-
-      <div class="search_resu" id="search-results"></div>
-      
-    <div class="container">
-      <div class="overlay" data-overlay></div>
-
-      <a href="../views/index.php" class="logo">
-        <img src="../assets/images/fastlanelogo.svg" width="160" height="50" alt="FastLane logo">
-      </a>
-
-      <button class="nav-open-btn" data-nav-open-btn aria-label="Open Menu">
-        <ion-icon name="menu-outline"></ion-icon>
-      </button>
-
-      <nav class="navbar" data-navbar>
-
-        <button class="nav-close-btn" data-nav-close-btn aria-label="Close Menu">
-          <ion-icon name="close-outline"></ion-icon>
-        </button>
-
-        <a href="#" class="logo">
-          <img src="../assets/images/fastlanelogo.svg" width="190" height="50" alt="FastLane logo">
-        </a>
-
-        <ul class="navbar-list">
-
-          <li class="navbar-item">
-            <a href="../views/allproduct.php" class="navbar-link">All Shop</a>
-          </li>
-
-          <li class="navbar-item">
-            <a href="#" class="navbar-link">Ready to ship</a>
-          </li>
-          
-          <li class="navbar-item">
-            <a href="#upcoming" class="navbar-link">Upcoming</a>
-          </li>
-
-          <li class="navbar-item">
-            <a href="../global/main.php" class="navbar-link">About</a>
-          </li>
-
-          <li class="navbar-item">
-            <a href="#" class="navbar-link">Contact</a>
-          </li>
-
-          <li class="navbar-item">
-            <a href="../global/test.php" class="navbar-link">Test</a>
-          </li>
-        </ul>
-
-        <ul class="nav-action-list">
-
-        <li>
-            <button class="nav-action-btn">
-        <div class="search-box">
-        <input checked="" class="checkbox" type="checkbox"> 
-        <div class="mainbox">
-            <div class="iconContainer">
-            <ion-icon name="search-outline" aria-hidden="true"></ion-icon>
-            </div>
-         <input class="search_input" placeholder="search" type="text" id="search">
-        </div>
-    </div>
-          <span class="nav-action-text">Search</span>
-            </button>
-          </li>
-<!--
-          <li>
-            <button class="nav-action-btn">
-              
-            <ion-icon name="search-outline" aria-hidden="true"></ion-icon>
-
-              <span class="nav-action-text">Search</span>
-            </button>
-          </li>
--->
-          <li>
-            <a href="<?=$link?>" class="nav-action-btn">
-              <?=$profile_img?>
-
-              <span class="nav-action-text"><?=$text?></span>
-            </a>
-          </li>
-
-          <li>
-            <a href="#" class="nav-action-btn">
-              <ion-icon name="heart-outline" aria-hidden="true"></ion-icon>
-
-              <span class="nav-action-text">Wishlist</span>
-
-              <data class="nav-action-badge" value="5" aria-hidden="true">5</data>
-            </a>
-          </li>
-
-          <li>
-            <button class="nav-action-btn" id="cart-icon">
-            <ion-icon name="bag-outline" aria-hidden="true"></ion-icon>
-                
-              <data class="nav-action-text" value="318.00">Basket: <strong>$318.00</strong></data>
-
-              <data class="nav-action-badge" value="4" aria-hidden="true">4</data>
-            </button>
-          </li>
-
-        </ul>
-
-      </nav>
-      
-    </div>
-  </header>
+      <p>Time remaining: <span id="countdown"></span></p>
     
+    <!-- Your payment form goes here -->
+
+    <script>
+        // Set the countdown target time (in seconds)// 10 minutes
+
+        const countdownElement = document.getElementById('');
+
+        function updateCountdown() {
+  const now = new Date();
+  const timeRemaining = releaseDate - now;
+
+  if (timeRemaining <= 0) {
+    // Release date has passed, you can take appropriate action here
+    document.querySelector('.clock').textContent = 'Release Date has passed';
+  } else {
+    const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+
+    // Update the HTML elements
+    document.getElementById('day').textContent = String(days).padStart(2, '0');
+    document.getElementById('hrs').textContent = String(hours).padStart(2, '0');
+    document.getElementById('mins').textContent = String(minutes).padStart(2, '0');
+    document.getElementById('sec').textContent = String(seconds).padStart(2, '0');
+  }
+}
+
+// Call the function initially to set up the timer
+updateCountdown();
+    </script>
+      </section>
+
+
 <?php require '../global/footer.php'; ?>
 
 

@@ -21,10 +21,12 @@ if (isset($_POST['delete_item'])) {
         // Handle any errors that might occur during the deletion.
         // You can display an error message or redirect to an error page.
         echo "Failed to delete the item from the cart.";
+        header("refresh: 1; url=http://localhost/".$_SESSION['current_page']);
     }
 } else {
     // Handle cases where the 'delete_item' parameter is not set.
     // You can display an error message or redirect to an error page.
     echo "Invalid request.";
+    header("refresh: 2; url=http://localhost/".$_SESSION['current_page']);
 }
 ?>

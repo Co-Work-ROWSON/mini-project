@@ -138,7 +138,11 @@
         overflow-x: auto;
         overflow-y: hidden;
       }
-
+      
+      a{
+        text-decoration: none;
+        color: #000;
+      }
      
       .scrollarea {
         overflow-y: auto;

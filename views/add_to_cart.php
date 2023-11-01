@@ -4,9 +4,9 @@ require '../global/func.php';
 
 // Include your database connection code here
 if (isset($_SESSION['user_login'])) {
-    $user = $_SESSION['user_login'];
+    $user_id = $_SESSION['user_login'];
 } else {
-    $user = ''; // or any default value you want
+    $user_id = ''; // or any default value you want
 }
 
 
@@ -43,11 +43,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             if ($updateStmt->execute()) {
                 // Cart item successfully updated
                 echo "Cart item updated";
-                header("refresh: 1; url=http://localhost/" . $_SESSION['current_page']);
+                header("refresh: 1; url=http://localhost/mini-project-yrs3/mini-project/views/products_view.php?product_id=" . $product_id);
             } else {
                 // Handle the update error
                 echo "Error: " . $updateStmt->errorInfo();
-                header("refresh: 1; url=http://localhost/mini-project-yrs3/mini-project/views/products_view.php?product_id=" . $product_id);
+                header("refresh: 1; url=http://localhost" . $_SESSION['current_page']);
             }
         } else {
             // The cart item doesn't exist, insert a new record
@@ -75,27 +75,27 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 if ($insertStmt->execute()) {
                     // Cart item successfully added
                     echo "Cart item added";
-                    header("refresh: 1; url=http://localhost/mini-project-yrs3/mini-project/views/products_view.php?product_id=" . $product_id);
+                    header("refresh: 1; url=http://localhost" . $_SESSION['current_page']);
                 } else {
                     // Handle the insertion error
                     echo "Error: " . $insertStmt->errorInfo();
-                    header("refresh: 1; url=http://localhost/mini-project-yrs3/mini-project/views/products_view.php?product_id=" . $product_id);
+                    header("refresh: 1; url=http://localhost" . $_SESSION['current_page']);
                 }
             } else {
                 // Handle the case where the product doesn't exist
                 echo "Product not found.";
-                header("refresh: 1; url=http://localhost/mini-project-yrs3/mini-project/views/products_view.php?product_id=" . $product_id);
+                header("refresh: 1; url=http://localhost" . $_SESSION['current_page']);
             }
         }
     } else {
         // Handle the case where user_id is not valid or not available
         echo "Invalid user or not logged in. Insert/Update canceled.";
-        header("refresh: 1; url=http://localhost/mini-project-yrs3/mini-project/views/products_view.php?product_id=" . $product_id);
+        header("location: ../views/login.php");
     }
 } else {
     // Handle the case where the request method is not POST
     echo "Invalid request method.";
-    header("refresh: 1; url=http://localhost/mini-project-yrs3/mini-project/views/products_view.php?product_id=" . $product_id);
+    header("refresh: 1; url=http://localhost" . $_SESSION['current_page']);
 }
 
 function getProductDetails($conn, $product_id) {

@@ -4,9 +4,8 @@
   require '../global/header.php'; 
   require '../global/menubar.php';
 
-  $_SERVER['pervious_page'] = $_SERVER['PHP_SELF'];
-
-  
+  //var_dump(checkLogin());
+  //var_dump($_SESSION['user_login']);
 ?>
   <main>
     <article>
@@ -55,7 +54,7 @@
                             echo '<li>
                             <div class="collection-card" style="background-image: url(../assets/images/'.$row['c_image'].')">
                                 <h3 class="h4 card-titlet">'.$row['category_name'].'</h3>
-                                <a href="#" class="btn btn-secondary">
+                                <a href="../views/allproduct.php" class="btn btn-secondary">
                                     <span>Explore All</span>
                                     <ion-icon name="arrow-forward-outline" aria-hidden="true"></ion-icon>
                                 </a>
@@ -76,22 +75,48 @@
       <section class="section upcoming" id="upcoming">
         <div class="container">
           <h2 class="h2 section-title">Upcoming Release</h2>
-      <?php
-      $result = tablequery('SELECT * FROM bannerlists');
+          <?php
+      $result = tablequery('SELECT b.*, p.Release_Date FROM bannerlists b join products p on b.product_id = p.product_id WHERE p.Release_Date order by p.Release_Date DESC ');
       if ($result) {
         // Use foreach to iterate through the result set
         foreach ($result as $row)  { 
             echo '<div class = "section upcoming-list" style="background-image: url(../assets/images/' . $row['bn_image'] . ')">
-            <div class="container '.$row['text_layout'].'">
-                      <h2 class="h1 hero-title">
+            <div class="container '.$row['text_layout'].'">';
+
+            $releaseDate = strtotime($row['Release_Date']);
+            $currentTime = time();
+            
+            if ($releaseDate > $currentTime) {
+                // Display the timer container only if the release date is in the future
+                echo '<div class="timer-container" release_date="' . $row['Release_Date'] . '">
+                          <div class="clock" id="#">
+                            <span id="day">00</span>
+                            <span>:</span>
+                            <span id="hrs">00</span>
+                            <span>:</span>
+                            <span id="mins">00</span>
+                            <span>:</span>
+                            <span id="sec">00</span>
+                          </div>
+                        </div>';
+            }
+                echo' <h2 class="h1 hero-title">
                         <strong>' . $row['bannerlist_infoL1'] . '</strong>
                       </h2>
                       <p class="hero-text">
                         ' . $row['bannerlist_infoL2'] . '
                       </p>
-                      <a href="../views/products_view.php?product_id=' . $row['product_id'] . '"><button class="btn btn-primary">
+                      <a href="../views/products_view.php?product_id=' . $row['product_id'] . '">
+                      <button class="btn btn-primary">';
+                      if ($releaseDate > $currentTime) {
+                        echo '<span>Coming Soon</span>';
+                      } else {
+                        echo '
+                        <a href="../views/products_view.php?product_id=' . $row['product_id'] . '"><button class="btn btn-primary">
                         <span>Shop Now</span>
-                        <ion-icon name="arrow-forward-outline" aria-hidden="true"></ion-icon>
+                        <ion-icon name="arrow-forward-outline" aria-hidden="true"></ion-icon>';
+                      }   
+                      echo '
                       </button></a>
                     </div>
                   </div>';

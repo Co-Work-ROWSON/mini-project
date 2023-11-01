@@ -148,6 +148,53 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
+/**
+ * CLOCK
+ */
+
+document.addEventListener('DOMContentLoaded', function () {
+  const productTimers = document.querySelectorAll('.timer-container');
+
+  function updateCountdown(productTimer) {
+    const now = new Date();
+    const releaseDate = new Date(productTimer.getAttribute('release_date'));
+
+    const timeRemaining = releaseDate - now;
+
+    if (timeRemaining <= 0) {
+      // Release date has passed, you can take appropriate action here
+      productTimer.querySelector('.clock').textContent = 'Release Date has passed';
+    } else {
+      const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+
+      // Update the HTML elements using querySelector on the current productTimer
+      productTimer.querySelector('#day').textContent = String(days).padStart(2, '0');
+      productTimer.querySelector('#hrs').textContent = String(hours).padStart(2, '0');
+      productTimer.querySelector('#mins').textContent = String(minutes).padStart(2, '0');
+      productTimer.querySelector('#sec').textContent = String(seconds).padStart(2, '0');
+    }
+  }
+
+  // Initial setup
+  productTimers.forEach(function (productTimer) {
+    updateCountdown(productTimer);
+  });
+
+  // Update the countdown every 1 second (1000 milliseconds)
+  setInterval(function () {
+    productTimers.forEach(function (productTimer) {
+      updateCountdown(productTimer);
+    });
+  }, 1000);
+});
+
+
+
+
+
 
 /**
  * Display products based on release date

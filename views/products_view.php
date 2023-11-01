@@ -20,7 +20,8 @@ require '../global/conn.php'; // Assuming this is a PDO database connection scri
 require '../global/func.php';
 require '../global/header.php';
 require '../global/menubar.php';
-
+//print_r($_SESSION['user_login']);
+//var_dump(checklogin());
 
 $conn = conndb(); // Assuming conndb() returns a PDO connection
 $sql = "SELECT p.*, c.category_name, b.carbrand_name FROM products p
@@ -35,7 +36,7 @@ if ($result) {
 
   if (!$row) {
       // Handle the case where no result is found
-      header("Location: http://localhost/mini-project-yrs3/mini-project/views/404.php");
+      header("Location: ../views/404.php");
       exit; // Exit to prevent further code execution
   }
 
@@ -124,39 +125,50 @@ ob_end_flush();
                         <p class="logis-detail">Ship via logistic partner (2-4 days)</p>
                         </div>
                       </div>
-                    
-                      <div class="logis_alert">
+                    <?php
+
+                      $result = tablequery('SELECT b.*, p.Release_Date FROM bannerlists b join products p on b.product_id = p.product_id WHERE p.Release_Date order by p.Release_Date DESC ');
+                      $result = $conn->query($sql);
+                      $releaseDate = strtotime($row['Release_Date']);
+                      $currentTime = time();
+
+                      if($releaseDate > $currentTime){
+                        echo '<div class="logis_alert">
                         <div class="logis-alert-detail" >
                       <span class="material-symbols-outlined" style= "color: rgb(211, 47, 47);">error</span>
                       <span class="span">New drops items may experience slight delay according to the distributor</span>
                       </div>  
                     </div>
-                    </div>
-                    
+
                     <hr class="hr-product">
-                    <div class="product">
-                    <div class="product-quantity">
-                        <h4 class="product-quantity-title">Quantity</h4>
-                        <div class="product-quantity-container">
-                            <button class="product-quantity-btn" data-action="decrement">-</button>
-                            <input class="product-quantity-input" type="number" value="1" min="1" max="10">
-                            <button class="product-quantity-btn" data-action="increment">+</button>
-                        </div>
-                    </div>
-                    </div>
-                    <hr class="hr-product">
-                    <form action="add_to_cart.php" method="post">
-    
-    <div class="product-action">
-        <input type="hidden" name="product_id" value="<?=$row['product_id']?>">
-        <input type="hidden" name="quantity" value="1">
+                    <form action="#" method="post">
+                    <div class="product-action">
+                      <input type="hidden" name="product_id" value="'.$row['product_id'].'">
+                   <input type="hidden" name="quantity" value="1">
         <button class="sell-btn" type="submit" id="sell-product">Sell</button>
-        <button class="add-to-cart-btn" type="submit" id="add-to-cart">
-            <span>Add to Cart</span>
+        <button class="add-to-cart-btn" type="submit" id="#">
+            <span>Incoming</span>
         </button>
     </div>
 </form>
-
+                    ';
+                      }else
+                      echo '<hr class="hr-product">
+                    
+                      <form action="add_to_cart.php" method="post">
+      <div class="product-action">
+          <input type="hidden" name="product_id" value="'.$row['product_id'].'">
+          <input type="hidden" name="quantity" value="1">
+          <button class="sell-btn" type="submit" id="sell-product">Sell</button>
+          <button class="add-to-cart-btn" type="submit" id="add-to-cart">
+              <span>Add to Cart</span>
+          </button>
+      </div>
+  </form>';
+                    ?>
+                    
+                    </div>
+                    
                 </div>
             </div>
         </section>
@@ -278,9 +290,6 @@ ob_end_flush();
     </main>
     <script style="position: absolute; color: white;">
     var userIsLoggedIn =  <?php echo isset($_SESSION['user_login']) && $_SESSION['user_login'] ? 'true' : 'false'; ?>;
-    var total = <?php echo $row['price']; ?>; 
-    var userId = <?php echo isset($_SESSION['user_login']) ? $_SESSION['user_login'] : 0; ?>;
-    var productId = <?php echo $getid; ?>;
   </script>
 
   <?php require '../global/footer.php'; ?>

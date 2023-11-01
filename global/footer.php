@@ -151,7 +151,7 @@
             </li>
 
             <li>
-              <a href="#" class="footer-link">
+              <a href="../global/test.php" class="footer-link">
                 <ion-icon name="chevron-forward-outline"></ion-icon>
 
                 <span class="footer-link-text">Terms & Conditions</span>

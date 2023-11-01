@@ -9,6 +9,7 @@
 } else {
     $product_id = ''; // or any default value you want
 }
+
 ?>
 
     <main>
@@ -19,7 +20,7 @@
         <div class="topic-cat">
             <div class="box-cat-tem1 header-cat">
               <div class="box-cat-tem2 header-title">
-              <h4 class="p-sidebar">Categories</h4>
+              <h4 class="p-sidebar">By Categories</h4>
               </div>
             </div>
             <div class="box-cat">
@@ -53,7 +54,7 @@
           <div class="topic-cat">
             <div class="box-cat-tem1 header-cat">
               <div class="box-cat-tem2 header-title">
-              <h4 class="p-sidebar">Car Brands</h4>
+              <h4 class="p-sidebar">By Regions</h4>
               </div>
             </div>
             <div class="box-cat">
@@ -87,7 +88,7 @@
           <div class="topic-cat">
             <div class="box-cat-tem1 header-cat">
               <div class="box-cat-tem2 header-title">
-              <h4 class="p-sidebar">Car Brands</h4>
+              <h4 class="p-sidebar">By Brands</h4>
               </div>
             </div>
             <div class="box-cat">
