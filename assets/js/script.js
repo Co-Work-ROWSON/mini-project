@@ -5,6 +5,12 @@ document.addEventListener("DOMContentLoaded", function () {
   const searchInput = document.getElementById("search");
   const searchResults = document.getElementById("search-results");
 
+  if(searchInput && searchResults) {
+    console.log("Both search input and search results found");
+  } else {
+    console.log("At least one of search input and search results not found");
+  }
+  
   searchInput.addEventListener("input", function () {
       const query = searchInput.value;
 

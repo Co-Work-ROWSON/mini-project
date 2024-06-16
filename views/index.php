@@ -99,6 +99,8 @@
                             <span id="sec">00</span>
                           </div>
                         </div>';
+            }else{
+
             }
                 echo' <h2 class="h1 hero-title">
                         <strong>' . $row['bannerlist_infoL1'] . '</strong>
@@ -107,12 +109,13 @@
                         ' . $row['bannerlist_infoL2'] . '
                       </p>
                       <a href="../views/products_view.php?product_id=' . $row['product_id'] . '">
-                      <button class="btn btn-primary">';
-                      if ($releaseDate > $currentTime) {
+                      ';
+
+            if ($releaseDate > $currentTime) {
                         echo '<span>Coming Soon</span>';
                       } else {
                         echo '
-                        <a href="../views/products_view.php?product_id=' . $row['product_id'] . '"><button class="btn btn-primary">
+                        <button class="btn btn-primary">
                         <span>Shop Now</span>
                         <ion-icon name="arrow-forward-outline" aria-hidden="true"></ion-icon>';
                       }   
@@ -149,20 +152,20 @@
           -->
 
           <?php
-$carbrands = [];
-$result = tablequery('SELECT DISTINCT SUBSTRING(carbrand_id, 1, 2) AS carbrand_text FROM carbrands');
+            $carbrands = [];
+            $result = tablequery('SELECT DISTINCT SUBSTRING(carbrand_id, 1, 2) AS carbrand_text FROM carbrands');
 
-if ($result) {
-    foreach ($result as $row)  { 
-        $carbrand_text = $row['carbrand_text'];
-        echo '<li>
-            <button class="filter-btn active" data-carbrand="' . $carbrand_text . '">' . $carbrand_text . '</button>
-        </li>';
-    }
-} else {
-    echo "0 results";
-}
-?>
+            if ($result) {
+                foreach ($result as $row)  { 
+                    $carbrand_text = $row['carbrand_text'];
+                    echo '<li>
+                        <button class="filter-btn active" data-carbrand="' . $carbrand_text . '">' . $carbrand_text . '</button>
+                    </li>';
+                }
+            } else {
+                echo "0 results";
+            }
+          ?>
           </ul>
           
           <ul class="product-list" id="product-list">
@@ -521,7 +524,7 @@ if ($result) {
         - #INSTA POST
       -->
 
-      <section class="section insta-post">
+      <!-- <section class="section insta-post">
 
         <ul class="insta-post-list has-scrollbar">
 
@@ -599,7 +602,7 @@ if ($result) {
 
         </ul>
 
-      </section>
+      </section> -->
 
     </article>
   </main>
